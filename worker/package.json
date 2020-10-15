@@ -1,0 +1,17 @@
+{
+  "private": true,
+  "name": "front",
+  "version": "1.0.0",
+  "description": "CF worker that fetches data from Ehentai and return favorite galleries",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write '**/*.{js,css,json,md}'"
+  },
+  "author": "George Miao <gm@miao.dev>",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "^1.18.2"
+  },
+  "dependencies": {}
+}
