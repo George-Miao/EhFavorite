@@ -13,7 +13,6 @@
 
   onMount(async () => {
     galleries = await loadGalleries()
-    console.log(galleries)
   })
 
   async function loadGalleries(): Promise<Array<Gallery>> {

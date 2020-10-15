@@ -1,4 +1,4 @@
-<div class="block">
+<div class="block" on:click="{(window.location.href = g.href)}">
   <div class="card gallery">
     <div class="card-image">
       <figure class="image">
@@ -44,6 +44,7 @@
   -webkit-column-break-inside: avoid
   -moz-column-break-inside: avoid
   column-break-inside: avoid
+  cursor: pointer
 .tags:not(:last-child)
   margin-bottom: 0.1rem !important
 </style>
