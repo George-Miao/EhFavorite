@@ -11,7 +11,9 @@
   <div class="level-item has-text-centered">
     <div>
       <p class="heading">Github</p>
-      <p class="title" href="">Link</p>
+      <p class="title" href="https://github.com/GeorgeMiao219/EhFavorite">
+        Link
+      </p>
     </div>
   </div>
 </nav>
