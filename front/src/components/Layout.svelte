@@ -34,7 +34,6 @@
 @mixin col($count, $gap)
   count: $count
   gap: $gap
-  fill: auto
 
 @mixin cols($count, $gap)
   .grid

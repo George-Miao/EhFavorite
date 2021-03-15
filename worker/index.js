@@ -23,7 +23,8 @@ addEventListener('scheduled', event => {
 })
 
 const handleCron = async () => {
-  return packPromise(getNstore(await setupID()))
+  const { cookie, mID } = await setupID()
+  return packPromise(getNstore(cookie, mID))
 }
 
 const handleFetch = async (req) => {
@@ -38,12 +39,13 @@ const handleFetch = async (req) => {
 }
 
 const setupID = async (req) => {
+  let cookie
   if (!req)
     cookie = await eh.get('cookies')
   else
     cookie = (new URL(req.url)).searchParams.get("cookie") ?? await eh.get('cookies')
-  mID = cookie?.match(/ipb_member_id=(\d+);?/)?.[1]
-  if (!cookie || !mID) error("Cookie or mID")
+  const mID = cookie?.match(/ipb_member_id=(\d+);?/)?.[1]
+  if (!cookie || !mID) throw error("Cookie or mID")
   return { cookie, mID }
 }
 
@@ -52,18 +54,18 @@ const getNstore = async (cookie, mID) => {
   if (!favs) throw error("favorites list")
   const details = await getDetail(Object.entries(favs))
   if (!details) throw error("item details")
+  console.log(details)
   const stringified = JSON.stringify(details)
   await eh.put(mID, stringified)
   return stringified
 }
 
 
-// Functions fetching info from Ehentai
 /**
- *
+ * Functions fetching info from Ehentai
  * @param {Number} pgnum Number of current page. 50 items per page. Start from 0.
  */
-async function getGalleries (cookie, pgnum = 0) {
+async function getGalleries(cookie, pgnum = 0) {
   const res = await fetch(`https://e-hentai.org/favorites.php?page=${pgnum}`, {
     headers: {
       cookie
@@ -88,7 +90,7 @@ async function getGalleries (cookie, pgnum = 0) {
  * 
  * @param {Object.prototype.entries} entries Entries of [gallery_id, gallery_token]
  */
-async function getDetail (entries) {
+async function getDetail(entries) {
   ret = []
   for (var i = 0, len = entries.length; i < len; i += 25) {
     const res = await fetch("https://api.e-hentai.org/api.php", {
