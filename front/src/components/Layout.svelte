@@ -1,10 +1,17 @@
 <div class="container">
   <Level nums="{galleries.length}" />
-  <div class="grid">
-    {#each galleries as g}
-      <GalleryItem bind:g />
-    {/each}
-  </div>
+  {#if !loading}
+    <div class="grid">
+      {#each galleries as g}
+        <GalleryItem bind:g />
+      {/each}
+    </div>
+  {/if}
+  {#if loading}
+    <div class="has-text-centered has-text-weight-semibold loading">
+      Loading...
+    </div>
+  {/if}
 </div>
 <footer class="footer">
   <div class="content has-text-centered">
@@ -28,6 +35,7 @@
   import Level from './Level.svelte'
 
   export let galleries: Array<Gallery> = []
+  export let loading: boolean = false
 </script>
 
 <style lang="sass">
@@ -55,4 +63,11 @@
 
 .container
   padding: 12px
+
+.loading
+  // color: #FC4D62
+  font:
+    family: 'Roboto Condensed', sans-serif
+    size: 2.5rem
+  margin: 8rem
 </style>

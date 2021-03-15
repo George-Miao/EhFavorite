@@ -1,5 +1,5 @@
 <main>
-  <Layout bind:galleries />
+  <Layout bind:galleries bind:loading />
 </main>
 
 <script lang="ts">
@@ -9,20 +9,38 @@
 
   import Layout from './components/Layout.svelte'
 
+  // export let galleries: Array<Gallery> = (new Array(100) as Array<Gallery>).fill(getFakeGallery())
   export let galleries: Array<Gallery> = []
+  export let loading: boolean = true
 
-  onMount(async () => {
-    galleries = await loadGalleries()
+  const move = function <T>(a: Array<T>, b: Array<T>) {
+    const push = (i: number) => {
+      b.push(a[i])
+      if (++i == a.length) return
+      setTimeout(() => push(i + 1), 50)
+    }
+  }
+
+  onMount(() => {
+    loading = true
+
+    loadGalleries().then((e) => {
+      if (!e) return
+      galleries = e
+      loading = false
+    })
   })
 
-  async function loadGalleries(): Promise<Array<Gallery>> {
-    const galleries: Response = await fetch('https://api.miao.dev/eh')
-    if (!galleries.ok) alert('Unable to load data from API, try later')
-    else {
-      const rawGalleries = await galleries.json()
-      rawGalleries.map(APItoGallery)
-      return rawGalleries
-    }
+  const loadGalleries = async () => {
+    return await fetch('https://api.miao.dev/eh')
+      .then((e) => {
+        if (!e.ok) {
+          throw new Error()
+        } else return e
+      })
+      .then((e) => e.json())
+      .then((e) => e.map(APItoGallery) as Gallery[])
+      .catch(() => alert('Unable to load data from API, try later'))
   }
 </script>
 

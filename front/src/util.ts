@@ -1,4 +1,4 @@
-import type { Gallery } from './type'
+import type { Category, Gallery } from './type'
 
 export function APItoGallery(e): Gallery {
   e.thumb = new URL(e.thumb)
@@ -6,7 +6,7 @@ export function APItoGallery(e): Gallery {
   e.filecount = parseInt(e.filecount)
   e.rating = parseFloat(e.rating)
   e.torrentcount = parseInt(e.torrentcount)
-  e.torrents.map((t) => {
+  e.torrents.map(t => {
     t.added = new Date(parseInt(t.added) * 1000)
     t.tsize = parseInt(t.tsize)
     t.fsize = parseInt(t.fsize)
@@ -18,14 +18,14 @@ export function APItoGallery(e): Gallery {
 
 export function parseTags(tags: Array<string>) {
   const ret = {
-    defaults: []
+    defaults: [],
   }
   for (let tag of tags) {
-    if (!tag.includes(":")) {
+    if (!tag.includes(':')) {
       ret.defaults.push(tag)
       continue
     }
-    const splittedTag = tag.split(":")
+    const splittedTag = tag.split(':')
     if (!ret[splittedTag[0]]) ret[splittedTag[0]] = []
     ret[splittedTag[0]].push(splittedTag[1])
   }
