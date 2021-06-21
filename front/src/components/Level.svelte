@@ -1,3 +1,7 @@
+<script lang="ts">
+  export let nums: Number
+</script>
+
 <nav class="level nav-level">
   <div class="level-item has-text-centered">
     <div>
@@ -17,10 +21,6 @@
     </div>
   </div>
 </nav>
-
-<script lang="ts">
-  export let nums: Number
-</script>
 
 <style lang="sass">
 .xp

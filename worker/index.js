@@ -49,6 +49,12 @@ const setupID = async (req) => {
   return { cookie, mID }
 }
 
+/**
+ * Get and store into KV
+ * @param {*} cookie cookie string
+ * @param {*} mID user identifier
+ * @returns list of items
+ */
 const getNstore = async (cookie, mID) => {
   const favs = await getGalleries(cookie)
   if (!favs) throw error("favorites list")
@@ -56,7 +62,7 @@ const getNstore = async (cookie, mID) => {
   if (!details) throw error("item details")
   console.log(details)
   const stringified = JSON.stringify(details)
-  await eh.put(mID, stringified)
+  await eh.put(mID, stringified, {expirationTtl: 40320})
   return stringified
 }
 
