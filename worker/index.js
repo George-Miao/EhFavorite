@@ -1,6 +1,6 @@
 const hrefReg = /href="https:\/\/e-hentai\.org\/g\/(\d+)\/([\da-zA-Z]+)\/?"/g
 const showingAllReg = /Showing (\d+) result/
-const errorMsg = "Error while fetching %. Make sure your cookie is corrent."
+const errorMsg = "Error while fetching %. Make sure your cookie is correct."
 const JSONInit = {
   headers: {
     'content-type': 'application/json',
