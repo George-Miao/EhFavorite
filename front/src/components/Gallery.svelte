@@ -12,9 +12,12 @@
     </div>
     <div class="card-content">
       <p class="title is-5">{g.title}</p>
-      <p class="subtitle is-6">
-        @{g.parsedTags?.['artist']?.[0] ?? 'Unknown artist'}
-      </p>
+      <div class="subtitle">
+        <p>
+          @{g.parsedTags?.['artist']?.[0] ?? 'Unknown artist'}
+        </p>
+        <Rating rating={g.rating} />
+      </div>
       <div class="tag-lines">
         {#each Object.entries(g.parsedTags) as entrie}
           <div class="tags">
@@ -49,6 +52,10 @@
   column-break-inside: avoid
   break-inside: avoid
   cursor: pointer
+.subtitle
+  display: flex
+  justify-content: space-between
+  align-items: center
 .tags:not(:last-child)
   margin-bottom: 0.1rem !important
 </style>
