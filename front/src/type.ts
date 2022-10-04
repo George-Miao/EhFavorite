@@ -9,34 +9,48 @@ export enum Category {
   'Cosplay',
   'Asian Porn',
   'Misc',
-  'Private',
+  'Private'
 }
 // Cast into types easier to work with
 export interface Gallery {
-  gid: Number
+  gid: number
   token: string
+  added: number
   archiver_key: string
   title: string
   title_jpn: string
   category: Category
   thumb: URL
   uploader: string
-  posted: Date
-  filecount: Number
-  filesize: Number
+  posted: string
+  filecount: number
+  filesize: number
   expunged: Boolean
-  rating: Number
-  torrentcount: Number
+  rating: number
+  torrentcount: number
   torrents: Array<Torrent>
   tags: Array<string>
   parsedTags: Map<string, Array<string>>
-  href: URL
+  eh_href: URL
+  ex_href: URL
 }
 
 export interface Torrent {
   hash: string
-  added: Date
+  added: string
   name: string
-  tsize: Number
-  fsize: Number
+  tsize: number
+  fsize: number
+}
+
+export interface Setting {
+  sort_by: keyof typeof SortBy
+  reverse: Boolean
+}
+
+export enum SortBy {
+  // AddDate = 'Add date',
+  PubDate = 'Upload date ',
+  Rating = 'Rating',
+  AddDate = 'Favorited date'
 }

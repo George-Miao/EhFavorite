@@ -1,4 +1,4 @@
-import type { Category, Gallery } from './type'
+import type { Gallery } from './type'
 
 export function APItoGallery(e): Gallery {
   e.thumb = new URL(e.thumb)
@@ -11,14 +11,15 @@ export function APItoGallery(e): Gallery {
     t.tsize = parseInt(t.tsize)
     t.fsize = parseInt(t.fsize)
   })
-  e.href = new URL(`https://e-hentai.org/g/${e.gid}/${e.token}/`)
+  e.eh_href = new URL(`https://e-hentai.org/g/${e.gid}/${e.token}/`)
+  e.ex_href = new URL(`https://exhentai.org/g/${e.gid}/${e.token}/`)
   e.parsedTags = parseTags(e.tags)
   return e
 }
 
 export function parseTags(tags: Array<string>) {
   const ret = {
-    defaults: [],
+    defaults: []
   }
   for (let tag of tags) {
     if (!tag.includes(':')) {

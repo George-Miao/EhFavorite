@@ -1,5 +1,6 @@
-const hrefReg = /href="https:\/\/e-hentai\.org\/g\/(\d+)\/([\da-zA-Z]+)\/?"/g
-const showingAllReg = /Showing (\d+) result/
+const hrefPattern = /href="https:\/\/e-hentai\.org\/g\/(\d+)\/([\da-zA-Z]+)\/?"/g
+const showingAllPattern = /Showing (\d+) result/
+const favTimePattern = /<div.*id="posted_(\d+)".*>(.*?)<\/div>/
 const errorMsg = 'Error while fetching %. Make sure your cookie is correct.'
 const JSONInit = {
   headers: {
@@ -69,26 +70,28 @@ const getNstore = async (cookie, mID) => {
 
 /**
  * Functions fetching info from Ehentai
- * @param {Number} pgnum Number of current page. 50 items per page. Start from 0.
+ * @param {Number} pageNum Number of current page. 50 items per page. Start from 0.
  */
-async function getGalleries(cookie, pgnum = 0) {
-  const res = await fetch(`https://e-hentai.org/favorites.php?page=${pgnum}`, {
+async function getGalleries(cookie, pageNum = 0) {
+  const res = await fetch(`https://e-hentai.org/favorites.php?page=${pageNum}`, {
     headers: {
       cookie
     }
   })
   if (res.status != 200) return
 
-  let text = await res.text()
+  const text = await res.text()
 
-  let resultNum = parseInt(text.match(showingAllReg)?.[1])
+  const resultNum = parseInt(text.match(showingAllPattern)?.[1])
   if (!resultNum) return
 
-  let matched = [...text.matchAll(hrefReg)]
   ret = {}
-  matched.forEach(e => ret[e[1]] = e[2])
-  if ((pgnum + 1) * 50 >= resultNum) return ret
-  else ret = Object.assign(ret, await getGalleries(cookie, pgnum + 1))
+  const href = [...text.matchAll(hrefPattern)]
+  href.forEach(e => ret[e[1]] = e[2])
+  const time = [...text.matchAll(favTimePattern)]
+  time.forEach(e => ret[e[1]]['added'] = +new Date(e[2]))
+  if ((pageNum + 1) * 50 >= resultNum) return ret
+  else ret = Object.assign(ret, await getGalleries(cookie, pageNum + 1))
   return ret
 }
 
@@ -97,7 +100,7 @@ async function getGalleries(cookie, pgnum = 0) {
  */
 async function getDetail(entries) {
   ret = []
-  for (var i = 0, len = entries.length; i < len; i += 25) {
+  for (let i = 0; i < entries.length; i += 25) {
     const res = await fetch('https://api.e-hentai.org/api.php', {
       method: 'POST',
       body: JSON.stringify({
@@ -108,8 +111,8 @@ async function getDetail(entries) {
       headers: {
         'Content-Type': 'application/json'
       }
-    })
-    ret = ret.concat((await res.json()).gmetadata)
+    }).then(r => r.json()).then(r => r.gmetadata)
+    ret = ret.concat(await res)
   }
   return ret
 }

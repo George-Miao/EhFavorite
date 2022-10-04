@@ -1,8 +1,44 @@
+<script lang="ts">
+  import type { Gallery, Setting } from '../type'
+  import Control from './Control.svelte'
+  import GalleryItem from './Gallery.svelte'
+  import Level from './Level.svelte'
+
+  export let galleries: Array<Gallery> = []
+  export let loading: boolean = false
+
+  let setting: Setting = { reverse: false, sort_by: 'AddDate' }
+
+  let sorted = galleries
+
+  $: {
+    sorted = galleries
+
+    sorted.sort((a, b) => {
+      if (setting.sort_by === 'PubDate') {
+        return +b.posted - +a.posted
+      } else if (setting.sort_by === 'Rating') {
+        return b.rating - a.rating
+      } else if (setting.sort_by === 'AddDate') {
+        return b.added - a.added
+      }
+    })
+
+    if (setting.reverse) {
+      sorted.reverse()
+    }
+
+    sorted = sorted
+  }
+</script>
+
 <div class="container">
-  <Level nums="{galleries.length}" />
+  <Level nums={sorted.length} />
+
   {#if !loading}
+    <Control bind:setting />
     <div class="grid">
-      {#each galleries as g}
+      {#each sorted as g}
         <GalleryItem bind:g />
       {/each}
     </div>
@@ -28,15 +64,6 @@
     </p>
   </div>
 </footer>
-
-<script lang="ts">
-  import type { Gallery } from '../type'
-  import GalleryItem from './Gallery.svelte'
-  import Level from './Level.svelte'
-
-  export let galleries: Array<Gallery> = []
-  export let loading: boolean = false
-</script>
 
 <style lang="sass">
 @mixin col($count, $gap)

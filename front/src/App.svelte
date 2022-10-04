@@ -1,53 +1,42 @@
-<main>
-  <Layout bind:galleries bind:loading />
-</main>
-
 <script lang="ts">
   import { onMount } from 'svelte'
+  import TimeAgo from 'javascript-time-ago'
+  import en from 'javascript-time-ago/locale/en'
+
   import type { Gallery } from './type'
   import { APItoGallery } from './util'
-
   import Layout from './components/Layout.svelte'
+  import { setContext } from 'svelte'
+
+  TimeAgo.addDefaultLocale(en)
+
+  setContext('timeAgo', new TimeAgo('en-US'))
 
   // export let galleries: Array<Gallery> = (new Array(100) as Array<Gallery>).fill(getFakeGallery())
   export let galleries: Array<Gallery> = []
   export let loading: boolean = true
 
-  const move = function <T>(a: Array<T>, b: Array<T>) {
-    const push = (i: number) => {
-      b.push(a[i])
-      if (++i == a.length) return
-      setTimeout(() => push(i + 1), 50)
-    }
-  }
-
   onMount(() => {
     loading = true
 
-    loadGalleries().then((e) => {
-      if (!e) return
-      galleries = e
+    loadGalleries().then(e => {
       loading = false
+      galleries = e || []
     })
   })
 
-  const loadGalleries = async () => {
-    return await fetch('https://api.miao.dev/eh')
-      .then((e) => {
+  const loadGalleries = async () =>
+    await fetch('https://api.miao.dev/eh')
+      .then(e => {
         if (!e.ok) {
-          throw new Error()
+          throw new Error(e.statusText)
         } else return e
       })
-      .then((e) => e.json())
-      .then((e) => e.map(APItoGallery) as Gallery[])
-      .catch(() => alert('Unable to load data from API, try later'))
-  }
+      .then(r => r.json())
+      .then(r => r.map(APItoGallery) as Gallery[])
+      .catch(e => alert(`Unable to load data from API, try later. ${e}`))
 </script>
 
-<style lang="sass">
-  html body 
-    width: 100%
-    height: 100%
-    margin: 0
-    padding: 0
-</style>
+<main>
+  <Layout bind:galleries bind:loading />
+</main>

@@ -4,21 +4,31 @@
 
 <div class="rating">
   <div class="stars" style={`--percentage: ${rating * 20}%`} />
-  {rating}/5
+  <p>{rating}/5</p>
 </div>
 
 <style lang="sass">
   .rating
-    font-size: 14px
+    font-size: 1rem
+    display: flex
+    flex-direction: row
+    align-items: center
+    flex-wrap: nowrap
+    justify-content: space-between
+    position: relative
+
+    p
+      word-break: keep-all
+      font-size: .8rem
+      margin-left: .4rem
+
   .stars
-    display: inline-block
     font-family: Times
     line-height: 1px
 
   .stars::before
     content:'★★★★★'
     background: linear-gradient(90deg, #fc0 var(--percentage), #fff var(--percentage))
-    // background: linear-gradient(90deg, #fc0 100%, #fff 100%)
     -webkit-background-clip: text
     -webkit-text-fill-color: transparent
 </style>
