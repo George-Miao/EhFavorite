@@ -140,6 +140,7 @@ dist
 .vscode-test
 
 # yarn v2
+.yarn/plugins
 .yarn/cache
 .yarn/unplugged
 .yarn/build-state.yml
